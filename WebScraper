@@ -1,0 +1,31 @@
+import tweepy
+import csv
+import shutil 
+
+#Twitter API credentials
+
+consumer_key = "E4AvhUQRBROp0Vwjkjx9l68vE"
+consumer_secret = "Lb23FMXpGWaIvYAjmYzuh55DO3AZTtGV2bBoTaSd6KcVF2WtzN"
+access_key = "1180980930959286272-mProAQ0upfyLRcjMLhKFdLh4kozhaU"
+access_secret = "2uifVW2JQvi3X4INjSgyjBGTYiu4xApMmE8NuXfmSVu0X"
+
+
+
+#API Endpoint
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+api = tweepy.API(auth, wait_on_rate_limit=True)
+
+csvFile = open('TheDataSet.csv', 'a')
+csvWriter = csv.writer(csvFile)
+
+#Ask the user how many tweets should be extracted
+max_tweets_extract = int(input("Enter the number of tweets that you want to extract - "))
+
+#Ask the user what hashtag you would like to scrape through
+topic = input("Enter the Topic you would like to scrape - ")
+
+for tweet in tweepy.Cursor(api.search,q= topic, rpp=100).items(max_tweets_extract): 
+    csvWriter.writerow([tweet.created_at, tweet.text.encode('utf-8')])
+    print('Extracted' + str(max_tweets_extract) + 'tweets with the topic ' + topic)
+
+csvFile.close()
