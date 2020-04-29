@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>TweetTroll: A Twitter Sentiment Analysis Application</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+ </head>
+ <body style= "background-color: #fffcb4">
+
+ <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">TweetTroll - Twitter Sentiment Analysis</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="http://127.0.0.1:8000/adminn_view">Home</a></li>
+      <li class="active"><a href="https://twitter.com/home">Twitter </a></li>
+    </ul>
+     <a href="/media/Test_Sentiment1.csv" download>
+        <button class="btn btn-info navbar-btn">Download</button>
+     </a>
+      <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Filter by Sentiment">
+  </div>
+</nav>
+
+
+  <div class="container-fluid">
+   <div class="table">
+    <h1 align="center">Sentimental Analysis of Tweets</h1>
+
+
+
+    <div class = "container-md">
+     <div class = "row">
+      <span class = "border border-warning">
+      <div class = "col-md-6" align="center">
+       <button type="button" class="btn btn-info" data-target="#chartpic"  data-toggle="collapse" onclick="showChart()" >Bar Chart for Sentimental Analysis</button>
+       <img class="collapse" id="chartpic" src="chartpic" style="display:none;" />
+      </div>
+      <div class = "col-md-6" align="center">
+        <button type="button" class="btn btn-info" data-target="#wordcloud"  data-toggle="collapse" onclick="showCloud()">WordCloud of Associated Words</button>
+        <img class="collapse" id="wordcloud" src="wordcloud" style="display:none;" />
+      </div>
+      </span>
+     </div>
+    <br/>
+     <div class = "row">
+      <div class = "col-md-6" align="center">
+       <button type="button" class="btn btn-info" data-target="#bigpic"  data-toggle="collapse" onclick="showPicture()">Pi Chart for Sentimental Analysis</button>
+       <img class="collapse" id="bigpic" src="bigpic" style="display:none;" />
+      </div>
+      <div class = "col-md-6" align="center">
+       <button type="button" class="btn btn-info" data-target="#compound"  data-toggle="collapse" onclick="showCompound()">Compound Score Distribution</button>
+       <img class="collapse" id="compound" src="compound" style="display:none;" />
+      </div>
+     </div>
+     <br/>
+     <div class = "row"  align="center">
+       <div class ="overflow-auto">
+        <div>
+         <button type="button"class="btn btn-info" data-target="#tweet_table" data-toggle="collapse" id="load_data" name="load_data">Show the Sentiment Table </button>
+        </div>
+
+      </div>
+      <div class="collapse" id="tweet_table"> </div>
+
+
+     </div>
+
+     <br/>
+
+
+     <br/>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
+
+<script>
+function showPicture() {
+  var sourceOfPicture = "/media/a.png";
+  var img = document.getElementById('bigpic')
+  img.src = sourceOfPicture.replace('90x90', '225x225');
+  img.style.display = "block";
+}
+function showChart() {
+  var sourceOfPicture = "/media/c.png";
+  var img = document.getElementById('chartpic')
+  img.src = sourceOfPicture.replace('90x90', '225x225');
+  img.style.display = "block";
+}
+function showCloud() {
+  var sourceOfPicture = "/media/w.png";
+  var img = document.getElementById('wordcloud')
+  img.src = sourceOfPicture.replace('90x90', '225x225');
+  img.style.display = "block";
+}
+function showCompound() {
+  var sourceOfPicture = "/media/l.png";
+  var img = document.getElementById('compound')
+  img.src = sourceOfPicture.replace('90x90', '225x225');
+  img.style.display = "block";
+}
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("tweet_table");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[2];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+$(document).ready(function(){
+ $('#load_data').click(function(){
+  $.ajax({
+   url:"/media/Test_Sentiment1.csv",
+   dataType:"text",
+   success:function(data)
+   {
+    var tweet_data = data.split(/\r?\n|\r/);
+    var table_data = '<table class="table table-bordered table-striped">';
+    for(var count = 0; count<tweet_data.length; count++)
+    {
+     var cell_data = tweet_data[count].split('"');
+
+     table_data += '<tr>';
+     for(var cell_count=0; cell_count<cell_data.length; cell_count++)
+     {
+      if(count === 0)
+      {
+       table_data += '<th>'+cell_data[cell_count]+'</th>';
+      }
+      else
+      {
+       table_data += '<td>'+cell_data[cell_count]+'</td>';
+      }
+     }
+     table_data += '</tr>';
+    }
+    table_data += '</table>';
+    $('#tweet_table').html(table_data);
+   }
+  });
+ });
+
+});
+</script>
+
+
