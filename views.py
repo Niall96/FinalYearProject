@@ -47,10 +47,10 @@ def adminn(request):
     topic = request.POST['topic']
     print(topic)
 
-    consumer_key = "E4AvhUQRBROp0Vwjkjx9l68vE"
-    consumer_secret = "Lb23FMXpGWaIvYAjmYzuh55DO3AZTtGV2bBoTaSd6KcVF2WtzN"
-    access_key = "1180980930959286272-mProAQ0upfyLRcjMLhKFdLh4kozhaU"
-    access_secret = "2uifVW2JQvi3X4INjSgyjBGTYiu4xApMmE8NuXfmSVu0X"
+    consumer_key = ""
+    consumer_secret = ""
+    access_key = ""
+    access_secret = ""
 
     # API Endpoint
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
